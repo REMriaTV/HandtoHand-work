@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>スプレッドシート vs サイト表示の比較</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #667eea;
+        }
+
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .side {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .side h2 {
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .spreadsheet {
+            border-left: 4px solid #0f9d58;
+        }
+
+        .website {
+            border-left: 4px solid #667eea;
+        }
+
+        /* スプレッドシート風のテーブル */
+        .sheet-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .sheet-table th,
+        .sheet-table td {
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            text-align: left;
+        }
+
+        .sheet-table th {
+            background: #f0f0f0;
+            font-weight: normal;
+            color: #666;
+        }
+
+        /* ウェブサイト風の表示 */
+        .character-card {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            border-radius: 15px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s;
+        }
+
+        .character-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-right: 1rem;
+            float: left;
+        }
+
+        .char-info {
+            overflow: hidden;
+        }
+
+        .char-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0.3rem;
+        }
+
+        .char-details {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .example-section {
+            margin-bottom: 2rem;
+        }
+
+        .arrow {
+            text-align: center;
+            font-size: 2rem;
+            color: #667eea;
+            margin: 1rem 0;
+        }
+
+        .note {
+            background: #fffbf0;
+            border-left: 4px solid #ff9800;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .data-flow {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .flow-step {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            margin: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>スプレッドシート → ウェブサイト 変換の実例</h1>
+
+        <div class="data-flow">
+            <h3>データの流れ</h3>
+            <div style="margin-top: 1rem;">
+                <span class="flow-step">📊 Googleスプレッドシート（生データ）</span>
+                <span style="font-size: 1.5rem;">→</span>
+                <span class="flow-step">🔄 API経由で取得</span>
+                <span style="font-size: 1.5rem;">→</span>
+                <span class="flow-step">🎨 デザイン適用</span>
+                <span style="font-size: 1.5rem;">→</span>
+                <span class="flow-step">✨ 美しいウェブサイト</span>
+            </div>
+        </div>
+
+        <!-- キャラクター情報の例 -->
+        <div class="example-section">
+            <h2 style="text-align: center; margin-bottom: 1rem;">例1: キャラクター情報</h2>
+            <div class="comparison">
+                <div class="side spreadsheet">
+                    <h2>📊 スプレッドシート（元データ）</h2>
+                    <table class="sheet-table">
+                        <thead>
+                            <tr>
+                                <th>A</th>
+                                <th>B</th>
+                                <th>C</th>
+                                <th>D</th>
+                                <th>E</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>名前</td>
+                                <td>年齢</td>
+                                <td>職業</td>
+                                <td>性格</td>
+                                <td>説明</td>
+                            </tr>
+                            <tr>
+                                <td>藤原悠馬</td>
+                                <td>32</td>
+                                <td>システムエンジニア</td>
+                                <td>責任感が強く、優柔不断</td>
+                                <td>東京での生活に疲れ、故郷へ帰省することを決意する主人公。</td>
+                            </tr>
+                            <tr>
+                                <td>佐藤美咲</td>
+                                <td>31</td>
+                                <td>カフェオーナー</td>
+                                <td>明るく前向き、芯が強い</td>
+                                <td>悠馬の幼馴染。10年前の約束を胸に、故郷でカフェを経営。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="side website">
+                    <h2>✨ ウェブサイト（変換後）</h2>
+                    <div class="character-card">
+                        <div class="avatar">悠</div>
+                        <div class="char-info">
+                            <div class="char-name">藤原 悠馬</div>
+                            <div class="char-details">32歳 / システムエンジニア</div>
+                            <div class="char-details" style="margin-top: 0.5rem;">
+                                責任感が強く、優柔不断な性格。東京での生活に疲れ、故郷へ帰省することを決意する主人公。
+                            </div>
+                        </div>
+                    </div>
+                    <div class="character-card">
+                        <div class="avatar">美</div>
+                        <div class="char-info">
+                            <div class="char-name">佐藤 美咲</div>
+                            <div class="char-details">31歳 / カフェオーナー</div>
+                            <div class="char-details" style="margin-top: 0.5rem;">
+                                明るく前向き、芯が強い性格。悠馬の幼馴染で、10年前の約束を胸に、故郷でカフェを経営。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="arrow">⬇️</div>
+
+        <!-- プロット情報の例 -->
+        <div class="example-section">
+            <h2 style="text-align: center; margin-bottom: 1rem;">例2: プロット情報</h2>
+            <div class="comparison">
+                <div class="side spreadsheet">
+                    <h2>📊 スプレッドシート（元データ）</h2>
+                    <table class="sheet-table">
+                        <tbody>
+                            <tr>
+                                <td style="background: #f0f0f0;">章</td>
+                                <td>起</td>
+                            </tr>
+                            <tr>
+                                <td style="background: #f0f0f0;">タイトル</td>
+                                <td>出発</td>
+                            </tr>
+                            <tr>
+                                <td style="background: #f0f0f0;">内容</td>
+                                <td>主人公・悠馬が東京での生活に疲れ、故郷への帰省を決意する。しかし、彼には10年前に残してきた未解決の問題があった。</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="side website">
+                    <h2>✨ ウェブサイト（変換後）</h2>
+                    <div style="position: relative; padding-left: 2rem;">
+                        <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: #667eea;"></div>
+                        <div style="background: #f8f9fa; border-radius: 10px; padding: 1.5rem; position: relative;">
+                            <div style="position: absolute; left: -2rem; top: 50%; transform: translateX(-50%); width: 12px; height: 12px; background: #667eea; border-radius: 50%; border: 3px solid white;"></div>
+                            <h4 style="color: #667eea; margin-bottom: 0.5rem;">起 - 出発</h4>
+                            <p style="color: #666;">主人公・悠馬が東京での生活に疲れ、故郷への帰省を決意する。しかし、彼には10年前に残してきた未解決の問題があった。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="note">
+            <h3>📌 変換のポイント</h3>
+            <ul style="margin-top: 0.5rem;">
+                <li><strong>データは正確に反映</strong>：名前、年齢、説明文などはそのまま使用</li>
+                <li><strong>表示方法をアレンジ</strong>：テーブル形式 → カード形式、タイムライン形式など</li>
+                <li><strong>ビジュアル要素を追加</strong>：アバター、アイコン、色、アニメーション</li>
+                <li><strong>読みやすさを重視</strong>：情報の階層化、適切な余白、タイポグラフィ</li>
+            </ul>
+        </div>
+
+        <div style="background: white; border-radius: 10px; padding: 2rem; margin-top: 2rem;">
+            <h3>🎯 まとめ</h3>
+            <p style="margin-top: 1rem;">
+                スプレッドシートのデータは<strong>100%正確に反映されます</strong>が、それを<strong>どう見せるか</strong>は
+                ウェブサイト側でデザインします。
+            </p>
+            <p style="margin-top: 1rem;">
+                例えば：
+            </p>
+            <ul style="margin-top: 0.5rem; list-style-position: inside;">
+                <li>「藤原悠馬, 32, システムエンジニア」→ 美しいカード形式で表示</li>
+                <li>「第1章, 起, 出発」→ タイムライン形式で視覚化</li>
+                <li>「8,200文字」→ プログレスバーで進捗を可視化</li>
+            </ul>
+            <p style="margin-top: 1rem; color: #667eea; font-weight: bold;">
+                データの中身は変えず、見せ方だけを美しくする ― それがこの方式の特徴です。
+            </p>
+        </div>
+    </div>
+</body>
+</html>

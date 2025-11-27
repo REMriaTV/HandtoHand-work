@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>「道程」執筆管理サイト「🤝HandtoHand」</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>小説「道程」</h1>
+            <p class="subtitle">執筆管理サイト「🤝HandtoHand」</p>
+        </header>
+
+        <nav class="tab-nav">
+            <button class="tab-button active" data-tab="overview">概要</button>
+            <button class="tab-button" data-tab="plot">プロット</button>
+            <button class="tab-button" data-tab="theme">お題</button>
+            <button class="tab-button" data-tab="characters">キャラ</button>
+            <button class="tab-button" data-tab="locations">場所</button>
+        </nav>
+
+        <main>
+            <!-- 概要タブ -->
+            <div class="tab-content active" id="overview">
+                <h2>概要</h2>
+                <div class="table-container">
+                    <table id="overview-table">
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- プロットタブ -->
+            <div class="tab-content" id="plot">
+                <h2>プロット</h2>
+                <div class="table-container">
+                    <table id="plot-table">
+                        <thead>
+                            <tr>
+                                <th>章</th>
+                                <th>イベント</th>
+                                <th>詳細</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- お題タブ -->
+            <div class="tab-content" id="theme">
+                <h2>お題</h2>
+                <div class="table-container">
+                    <table id="theme-table">
+                        <thead>
+                            <tr>
+                                <th>章</th>
+                                <th>お題</th>
+                                <th>イメージ</th>
+                                <th>補足</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- キャラタブ -->
+            <div class="tab-content" id="characters">
+                <h2>キャラ</h2>
+                <div class="table-container">
+                    <table id="characters-table">
+                        <thead>
+                            <tr>
+                                <th>名前</th>
+                                <th>役割</th>
+                                <th>性格</th>
+                                <th>備考</th>
+                                <th>外見</th>
+                                <th>メモ</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 場所タブ -->
+            <div class="tab-content" id="locations">
+                <h2>場所</h2>
+                <div class="table-container">
+                    <table id="locations-table">
+                        <thead>
+                            <tr>
+                                <th>場所名</th>
+                                <th>説明</th>
+                                <th>重要度</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+
+        <footer>
+            <div class="update-controls">
+                <button class="btn-sheets" onclick="refreshFromGoogleSheets()">スプレッドシートから更新</button>
+                <span class="last-updated">最終更新: <span id="last-updated-time">-</span></span>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Google Sheets API -->
+    <script src="https://apis.google.com/js/api.js"></script>
+    <script src="config.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

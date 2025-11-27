@@ -1,0 +1,43 @@
+{
+  "project": "Hand to Hand 制作管理・公開サイト",
+  "lastUpdated": "2025-11-27T12:50:00+09:00",
+  "currentPhase": "Google Sheets API連携の準備",
+  "completedTasks": [
+    {
+      "task": "基本的な管理サイトのプロトタイプ作成",
+      "files": ["index.html", "style.css", "script.js"],
+      "status": "completed"
+    },
+    {
+      "task": "スプレッドシート構造の確認",
+      "details": "概要、プロット、お題、キャラ、場所、管理の6タブ構成",
+      "status": "completed"
+    }
+  ],
+  "nextTasks": [
+    {
+      "task": "Google Cloud ConsoleでAPIキー取得",
+      "priority": 1,
+      "details": "Sheets API v4を有効化してAPIキーを生成"
+    },
+    {
+      "task": "API連携機能の実装",
+      "priority": 2,
+      "details": "スプレッドシートIDを使用してデータ取得"
+    },
+    {
+      "task": "UIへのデータ反映",
+      "priority": 3,
+      "details": "取得したデータを既存のUIに統合"
+    }
+  ],
+  "importantNotes": [
+    "スプレッドシートID: 1Nh1yDXMdR6Z-Hoyua6T76hdtmO5g5x7Prt1-SpRGoKc",
+    "公開URL使用時はキャッシュに注意（5分〜数時間の遅延あり）",
+    "既存のローカルストレージ機能は残しつつAPI連携を追加予定"
+  ],
+  "context": {
+    "authorVision": "原稿と制作情報を合わせて公開し、読者に作品の世界観をより深く伝える",
+    "technicalApproach": "Google Sheets APIを使った自動連携（リアルタイム更新）"
+  }
+}

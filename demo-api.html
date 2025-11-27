@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>道程 - Google Sheets API連携デモ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Hiragino Sans', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 1.2rem;
+        }
+
+        .sync-status {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            margin-top: 1rem;
+            gap: 0.5rem;
+        }
+
+        .sync-status.syncing {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            opacity: 0.8;
+        }
+
+        .progress-bar {
+            background: #e0e0e0;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, #667eea, #764ba2);
+            transition: width 0.5s ease;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            margin-bottom: -2px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .character-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .character-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .character-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .plot-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .plot-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e0e0e0;
+        }
+
+        .plot-point {
+            position: relative;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .plot-point::before {
+            content: '';
+            position: absolute;
+            left: -2rem;
+            top: 50%;
+            transform: translateX(-50%);
+            width: 12px;
+            height: 12px;
+            background: #667eea;
+            border-radius: 50%;
+            border: 3px solid #f5f5f5;
+        }
+
+        .location-map {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-top: 1rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .location-item {
+            padding: 1rem;
+            border-left: 4px solid #667eea;
+            margin-bottom: 1rem;
+            background: #f8f8fc;
+        }
+
+        .last-update {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>小説「道程」</h1>
+            <p class="subtitle">Hand to Hand - 創作過程をリアルタイムで共有</p>
+            <div class="sync-status syncing">
+                <span>🔄</span>
+                <span>Google スプレッドシートと同期中...</span>
+            </div>
+        </header>
+
+        <div class="dashboard">
+            <div class="card">
+                <h3>
+                    <span class="card-icon">📊</span>
+                    執筆進捗
+                </h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 65%"></div>
+                </div>
+                <p>現在の進捗: <strong>65%</strong></p>
+                <p>総文字数: <strong>42,350文字</strong></p>
+            </div>
+
+            <div class="card">
+                <h3>
+                    <span class="card-icon">📝</span>
+                    最新の更新
+                </h3>
+                <p>第7章「再会」を執筆中</p>
+                <p><small>最終更新: 2025年11月27日 14:30</small></p>
+            </div>
+
+            <div class="card">
+                <h3>
+                    <span class="card-icon">👥</span>
+                    登場人物
+                </h3>
+                <p>主要キャラクター: <strong>5名</strong></p>
+                <p>サブキャラクター: <strong>12名</strong></p>
+            </div>
+        </div>
+
+        <nav class="tabs">
+            <button class="tab active" onclick="showTab('plot')">プロット</button>
+            <button class="tab" onclick="showTab('characters')">キャラクター</button>
+            <button class="tab" onclick="showTab('locations')">場所設定</button>
+            <button class="tab" onclick="showTab('themes')">お題・テーマ</button>
+            <button class="tab" onclick="showTab('progress')">執筆管理</button>
+        </nav>
+
+        <div id="plot" class="tab-content active">
+            <h2>プロット</h2>
+            <div class="plot-timeline">
+                <div class="plot-point">
+                    <h4>起 - 出発</h4>
+                    <p>主人公・悠馬が東京での生活に疲れ、故郷への帰省を決意する。しかし、彼には10年前に残してきた未解決の問題があった。</p>
+                </div>
+                <div class="plot-point">
+                    <h4>承 - 再会</h4>
+                    <p>故郷で幼馴染の美咲と再会。彼女は地元で小さなカフェを営んでいた。10年前の約束について、二人は向き合うことになる。</p>
+                </div>
+                <div class="plot-point">
+                    <h4>転 - 真実</h4>
+                    <p>悠馬が東京を離れた本当の理由が明らかになる。それは美咲を守るための決断だった。しかし、その真実は新たな問題を生む。</p>
+                </div>
+                <div class="plot-point">
+                    <h4>結 - 選択</h4>
+                    <p>過去と向き合った二人は、それぞれの道を選択する。その選択は、新しい「道程」の始まりでもあった。</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="characters" class="tab-content">
+            <h2>キャラクター設定</h2>
+            <div class="character-grid">
+                <div class="character-card">
+                    <div class="character-avatar">悠</div>
+                    <h4>藤原 悠馬</h4>
+                    <p><strong>年齢:</strong> 32歳</p>
+                    <p><strong>職業:</strong> システムエンジニア</p>
+                    <p><strong>性格:</strong> 責任感が強く、優柔不断</p>
+                    <p><small>東京での生活に疲れ、故郷へ帰省することを決意する主人公。</small></p>
+                </div>
+                <div class="character-card">
+                    <div class="character-avatar">美</div>
+                    <h4>佐藤 美咲</h4>
+                    <p><strong>年齢:</strong> 31歳</p>
+                    <p><strong>職業:</strong> カフェオーナー</p>
+                    <p><strong>性格:</strong> 明るく前向き、芯が強い</p>
+                    <p><small>悠馬の幼馴染。10年前の約束を胸に、故郷でカフェを経営。</small></p>
+                </div>
+                <div class="character-card">
+                    <div class="character-avatar">健</div>
+                    <h4>山田 健太</h4>
+                    <p><strong>年齢:</strong> 33歳</p>
+                    <p><strong>職業:</strong> 地元企業勤務</p>
+                    <p><strong>性格:</strong> 面倒見が良い、お節介</p>
+                    <p><small>悠馬と美咲の共通の友人。二人の関係を心配している。</small></p>
+                </div>
+            </div>
+        </div>
+
+        <div id="locations" class="tab-content">
+            <h2>場所設定</h2>
+            <div class="location-map">
+                <div class="location-item">
+                    <h4>海沿いの町</h4>
+                    <p>物語の舞台となる故郷。人口約2万人の小さな港町。</p>
+                </div>
+                <div class="location-item">
+                    <h4>café 道程</h4>
+                    <p>美咲が経営するカフェ。海が見える高台にあり、地元の人々の憩いの場。</p>
+                </div>
+                <div class="location-item">
+                    <h4>灯台</h4>
+                    <p>悠馬と美咲の思い出の場所。10年前の約束もここで交わされた。</p>
+                </div>
+                <div class="location-item">
+                    <h4>東京のオフィス</h4>
+                    <p>悠馬が働くIT企業。都心の高層ビルにあり、故郷とは対照的な環境。</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="themes" class="tab-content">
+            <h2>お題・テーマ</h2>
+            <div class="card">
+                <h3>中心テーマ</h3>
+                <p><strong>「道程」</strong> - 人生の歩み、選択、そして新しい一歩</p>
+                <ul>
+                    <li>過去との向き合い方</li>
+                    <li>故郷と都会の対比</li>
+                    <li>約束と責任</li>
+                    <li>再出発の勇気</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>執筆のきっかけ</h3>
+                <p>「もし10年前に違う選択をしていたら」という問いから始まった物語。誰もが抱える「もしも」に向き合う勇気について描きたかった。</p>
+            </div>
+        </div>
+
+        <div id="progress" class="tab-content">
+            <h2>執筆管理</h2>
+            <div class="card">
+                <h3>章別進捗</h3>
+                <table style="width: 100%; margin-top: 1rem;">
+                    <tr>
+                        <th style="text-align: left; padding: 0.5rem;">章</th>
+                        <th style="text-align: left; padding: 0.5rem;">タイトル</th>
+                        <th style="text-align: right; padding: 0.5rem;">文字数</th>
+                        <th style="text-align: center; padding: 0.5rem;">状態</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem;">第1章</td>
+                        <td style="padding: 0.5rem;">帰郷</td>
+                        <td style="text-align: right; padding: 0.5rem;">8,200</td>
+                        <td style="text-align: center; padding: 0.5rem;">✅ 完了</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem;">第2章</td>
+                        <td style="padding: 0.5rem;">十年ぶりの海</td>
+                        <td style="text-align: right; padding: 0.5rem;">7,500</td>
+                        <td style="text-align: center; padding: 0.5rem;">✅ 完了</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem;">第3章</td>
+                        <td style="padding: 0.5rem;">café 道程</td>
+                        <td style="text-align: right; padding: 0.5rem;">9,100</td>
+                        <td style="text-align: center; padding: 0.5rem;">✅ 完了</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem;">第4章</td>
+                        <td style="padding: 0.5rem;">約束の灯台</td>
+                        <td style="text-align: right; padding: 0.5rem;">6,800</td>
+                        <td style="text-align: center; padding: 0.5rem;">✅ 完了</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem;">第5章</td>
+                        <td style="padding: 0.5rem;">真実</td>
+                        <td style="text-align: right; padding: 0.5rem;">5,400</td>
+                        <td style="text-align: center; padding: 0.5rem;">✅ 完了</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem;">第6章</td>
+                        <td style="padding: 0.5rem;">選択</td>
+                        <td style="text-align: right; padding: 0.5rem;">5,350</td>
+                        <td style="text-align: center; padding: 0.5rem;">✅ 完了</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 0.5rem;">第7章</td>
+                        <td style="padding: 0.5rem;">新しい道程</td>
+                        <td style="text-align: right; padding: 0.5rem;">2,100</td>
+                        <td style="text-align: center; padding: 0.5rem;">📝 執筆中</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="last-update">
+            最終同期: <span id="lastSync">2025年11月27日 14:30:45</span>
+        </div>
+    </div>
+
+    <script>
+        // タブ切り替え機能
+        function showTab(tabName) {
+            // すべてのタブコンテンツを非表示
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // すべてのタブボタンから active クラスを削除
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // 選択されたタブを表示
+            document.getElementById(tabName).classList.add('active');
+            
+            // 選択されたタブボタンに active クラスを追加
+            event.target.classList.add('active');
+        }
+
+        // 同期状態のシミュレーション
+        setTimeout(() => {
+            const syncStatus = document.querySelector('.sync-status');
+            syncStatus.classList.remove('syncing');
+            syncStatus.innerHTML = '<span>✅</span><span>同期完了</span>';
+        }, 2000);
+
+        // リアルタイム更新のシミュレーション
+        setInterval(() => {
+            const now = new Date();
+            const formatted = now.toLocaleString('ja-JP', {
+                year: 'numeric',
+                month: 'numeric', 
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            document.getElementById('lastSync').textContent = formatted;
+        }, 1000);
+
+        // Google Sheets API統合のサンプルコード（コメント形式）
+        /*
+        // APIキーとスプレッドシートID
+        const API_KEY = 'YOUR_API_KEY';
+        const SPREADSHEET_ID = '1Nh1yDXMdR6Z-Hoyua6T76hdtmO5g5x7Prt1-SpRGoKc';
+        
+        // データ取得関数
+        async function fetchSheetData(sheetName) {
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${sheetName}?key=${API_KEY}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            return data.values;
+        }
+        
+        // 定期的にデータを取得して更新
+        async function updateFromSheets() {
+            try {
+                // 各シートからデータを取得
+                const plotData = await fetchSheetData('プロット');
+                const characterData = await fetchSheetData('キャラ');
+                const progressData = await fetchSheetData('管理');
+                
+                // UIを更新
+                updatePlotSection(plotData);
+                updateCharacterSection(characterData);
+                updateProgressSection(progressData);
+                
+                // 同期状態を更新
+                updateSyncStatus('completed');
+            } catch (error) {
+                console.error('同期エラー:', error);
+                updateSyncStatus('error');
+            }
+        }
+        
+        // 30秒ごとに自動更新
+        setInterval(updateFromSheets, 30000);
+        */
+    </script>
+</body>
+</html>
