@@ -196,6 +196,12 @@ td {
     word-break: break-word;
 }
 
+.table-container a {
+    color: #2563eb;
+    text-decoration: underline;
+    word-break: break-all;
+}
+
 td:last-child {
     border-right: none;
 }
