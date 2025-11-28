@@ -129,15 +129,18 @@ function displayOverview(data) {
 }
 
 // プロットデータ表示
-const PLOT_DISPLAY_HEADERS = ['構成', 'お題', '場所', 'No.', '掲載', '着手', '校正', '音楽', 'あらすじ', 'できごと', '執筆メモ'];
+const PLOT_DISPLAY_HEADERS = ['構成', 'お題', '場所', 'no.', '掲載', '着手', '校正', '音楽', 'あらすじ', 'できごと', '執筆メモ'];
 
 function displayPlot(data) {
     const tbody = document.querySelector('#plot-table tbody');
     tbody.innerHTML = '';
     if (!data || data.length < 2) return;
 
-    const headerRow = data[0];
-    const columnIndexes = PLOT_DISPLAY_HEADERS.map(name => headerRow.indexOf(name));
+    const headerRow = data[0].map(header => header && header.toString().trim());
+    const columnIndexes = PLOT_DISPLAY_HEADERS.map(name => {
+        const target = name.toLowerCase();
+        return headerRow.findIndex(h => (h || '').toString().trim().toLowerCase() === target);
+    });
 
     for (let i = 1; i < data.length; i++) {
         const row = data[i] || [];
