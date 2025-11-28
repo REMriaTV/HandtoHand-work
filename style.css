@@ -103,6 +103,15 @@ table {
     min-width: 860px; /* 横スクロールを前提とした最低幅 */
 }
 
+/* 概要タブは横スクロールさせない */
+#overview .table-container {
+    overflow: visible;
+}
+
+#overview-table {
+    min-width: auto;
+}
+
 thead {
     background: #f3f4f6;
     position: sticky;
@@ -155,6 +164,17 @@ tr:hover td {
 #characters-table th:nth-child(4) { width: 20%; }
 #characters-table th:nth-child(5) { width: 15%; }
 #characters-table th:nth-child(6) { width: 15%; }
+
+/* お題タブの列幅調整 */
+#theme-table th:nth-child(1),
+#theme-table td:nth-child(1) {
+    width: 8%;
+}
+
+#theme-table th:nth-child(2),
+#theme-table td:nth-child(2) {
+    width: 22%;
+}
 
 /* フッター */
 footer {
