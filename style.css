@@ -114,25 +114,25 @@ table {
 
 /* プロット表は情報量が多いため広めに確保 */
 #plot-table {
-    min-width: 1150px;
+    min-width: 1050px;
 }
 
 /* プロットタブの列幅調整 */
 #plot-table th:nth-child(1),
-#plot-table td:nth-child(1) { width: 80px; }
+#plot-table td:nth-child(1) { width: 70px; text-align: center; }
 
 #plot-table th:nth-child(2),
-#plot-table td:nth-child(2) { width: 110px; }
+#plot-table td:nth-child(2) { width: 95px; }
 
 #plot-table th:nth-child(3),
-#plot-table td:nth-child(3) { width: 100px; }
+#plot-table td:nth-child(3) { width: 90px; }
 
 #plot-table th:nth-child(4),
-#plot-table td:nth-child(4) { width: 60px; text-align: center; }
+#plot-table td:nth-child(4) { width: 55px; text-align: center; }
 
 #plot-table th:nth-child(5),
 #plot-table td:nth-child(5) {
-    width: 90px;
+    width: 80px;
     word-break: break-all;
 }
 
@@ -142,7 +142,7 @@ table {
 #plot-table td:nth-child(7),
 #plot-table th:nth-child(8),
 #plot-table td:nth-child(8) {
-    width: 60px;
+    width: 55px;
     text-align: center;
 }
 
