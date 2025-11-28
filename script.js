@@ -233,7 +233,9 @@ function formatCellContent(content) {
     // **テキスト** を <strong>テキスト</strong> に変換
     formatted = formatted.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
     // URLをリンクに変換
-    formatted = formatted.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+    formatted = formatted.replace(/(https?:\/\/[^\s<]+)/g, (match) => {
+        return `<a href="${match}" target="_blank" rel="noopener noreferrer">リンク</a>`;
+    });
     return formatted;
 }
 
