@@ -24,19 +24,33 @@ document.addEventListener('DOMContentLoaded', () => {
 function setupTabNavigation() {
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
+    const tabOrder = Array.from(tabButtons).map(btn => btn.getAttribute('data-tab'));
+
+    const activateTab = (targetTab) => {
+        if (!targetTab) return;
+        tabButtons.forEach(btn => {
+            const isTarget = btn.getAttribute('data-tab') === targetTab;
+            btn.classList.toggle('active', isTarget);
+        });
+        tabContents.forEach(content => {
+            content.classList.toggle('active', content.id === targetTab);
+        });
+    };
 
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             const targetTab = button.getAttribute('data-tab');
-
-            // ボタンのアクティブ状態を切り替え
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            // コンテンツの表示を切り替え
-            tabContents.forEach(content => content.classList.remove('active'));
-            document.getElementById(targetTab).classList.add('active');
+            activateTab(targetTab);
         });
+    });
+
+    document.addEventListener('keydown', (event) => {
+        const usesShortcut = event.metaKey && event.ctrlKey;
+        if (!usesShortcut) return;
+        const number = parseInt(event.key, 10);
+        if (Number.isNaN(number) || number < 1 || number > tabOrder.length) return;
+        event.preventDefault();
+        activateTab(tabOrder[number - 1]);
     });
 }
 
