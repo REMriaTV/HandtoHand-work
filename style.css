@@ -87,9 +87,12 @@ header h1 {
 
 /* テーブルスタイル（スプレッドシート風） */
 .table-container {
+    width: 100%;
     overflow-x: auto;
     border: 1px solid #d1d5db;
     border-radius: 4px;
+    -webkit-overflow-scrolling: touch; /* 慣性スクロール */
+    overscroll-behavior-x: contain;
 }
 
 table {
@@ -97,6 +100,7 @@ table {
     border-collapse: collapse;
     background: white;
     font-size: 14px;
+    min-width: 860px; /* 横スクロールを前提とした最低幅 */
 }
 
 thead {
@@ -126,6 +130,7 @@ td {
     vertical-align: top;
     white-space: pre-wrap;
     line-height: 1.6;
+    word-break: break-word;
 }
 
 td:last-child {
@@ -210,6 +215,10 @@ footer {
         padding: 10px;
     }
 
+    .table-container {
+        margin-bottom: 16px;
+    }
+
     header h1 {
         font-size: 2em;
     }
@@ -221,6 +230,8 @@ footer {
 
     table {
         font-size: 12px;
+        min-width: 640px; /* モバイルでも表全体を維持 */
+        table-layout: fixed;
     }
 
     th, td {
