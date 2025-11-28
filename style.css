@@ -112,6 +112,11 @@ table {
     min-width: auto;
 }
 
+/* プロット表は情報量が多いため広めに確保 */
+#plot-table {
+    min-width: 1400px;
+}
+
 thead {
     background: #f3f4f6;
     position: sticky;
@@ -168,12 +173,12 @@ tr:hover td {
 /* お題タブの列幅調整 */
 #theme-table th:nth-child(1),
 #theme-table td:nth-child(1) {
-    width: 8%;
+    width: 6%;
 }
 
 #theme-table th:nth-child(2),
 #theme-table td:nth-child(2) {
-    width: 22%;
+    width: 18%;
 }
 
 /* フッター */

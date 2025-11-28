@@ -75,7 +75,7 @@ async function loadFromGoogleSheets() {
         // プロットタブ
         const plotResponse = await gapi.client.sheets.spreadsheets.values.get({
             spreadsheetId: SHEETS_CONFIG.SPREADSHEET_ID,
-            range: '1_プロット!A:C',
+            range: '1_プロット!A:M', // プロットタブの13列すべてを取得
         });
         displayPlot(plotResponse.result.values || []);
 
@@ -135,16 +135,24 @@ function displayPlot(data) {
     
     // ヘッダー行をスキップ
     for (let i = 1; i < data.length; i++) {
-        const row = data[i];
-        if (row.length >= 1) {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${formatCellContent(row[0])}</td>
-                <td>${formatCellContent(row[1])}</td>
-                <td>${formatCellContent(row[2])}</td>
-            `;
-            tbody.appendChild(tr);
-        }
+        const row = data[i] || [];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${formatCellContent(row[0])}</td>
+            <td>${formatCellContent(row[1])}</td>
+            <td>${formatCellContent(row[2])}</td>
+            <td>${formatCellContent(row[3])}</td>
+            <td>${formatCellContent(row[4])}</td>
+            <td>${formatCellContent(row[5])}</td>
+            <td>${formatCellContent(row[6])}</td>
+            <td>${formatCellContent(row[7])}</td>
+            <td>${formatCellContent(row[8])}</td>
+            <td>${formatCellContent(row[9])}</td>
+            <td>${formatCellContent(row[10])}</td>
+            <td>${formatCellContent(row[11])}</td>
+            <td>${formatCellContent(row[12])}</td>
+        `;
+        tbody.appendChild(tr);
     }
 }
 
