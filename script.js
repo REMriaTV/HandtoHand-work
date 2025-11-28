@@ -266,7 +266,10 @@ function formatCellContent(content) {
 // 最終更新時刻更新
 function updateLastUpdatedTime() {
     const now = new Date().toLocaleString('ja-JP');
-    document.getElementById('last-updated-time').textContent = now;
+    const footerTime = document.getElementById('last-updated-time');
+    if (footerTime) {
+        footerTime.textContent = now;
+    }
     const tabTime = document.getElementById('tab-last-updated-time');
     if (tabTime) {
         tabTime.textContent = now;
