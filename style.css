@@ -150,18 +150,12 @@ table {
 #plot-table td:nth-child(9),
 #plot-table th:nth-child(10),
 #plot-table td:nth-child(10) {
-    width: 230px;
+    width: 240px;
 }
 
 #plot-table th:nth-child(11),
 #plot-table td:nth-child(11) {
     width: 320px; /* 執筆メモ */
-}
-
-#plot-table th:nth-child(12),
-#plot-table td:nth-child(12) {
-    width: 80px;
-    text-align: right;
 }
 
 thead {

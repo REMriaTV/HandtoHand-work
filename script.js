@@ -129,7 +129,7 @@ function displayOverview(data) {
 }
 
 // プロットデータ表示
-const PLOT_DISPLAY_HEADERS = ['構成', 'お題', '場所', 'No.', '掲載', '着手', '校正', '音楽', 'あらすじ', 'できごと', '執筆メモ', '文字数'];
+const PLOT_DISPLAY_HEADERS = ['構成', 'お題', '場所', 'No.', '掲載', '着手', '校正', '音楽', 'あらすじ', 'できごと', '執筆メモ'];
 
 function displayPlot(data) {
     const tbody = document.querySelector('#plot-table tbody');
