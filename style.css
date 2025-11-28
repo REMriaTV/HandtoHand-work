@@ -44,6 +44,7 @@ header h1 {
     margin-bottom: 20px;
     border-bottom: 2px solid #ddd;
     overflow-x: auto;
+    align-items: center;
 }
 
 .tab-button {
@@ -83,6 +84,13 @@ header h1 {
 .tab-content h2 {
     margin-bottom: 20px;
     color: #2c3e50;
+}
+
+.tab-last-updated {
+    margin-left: auto;
+    font-size: 0.9em;
+    color: #6b7280;
+    white-space: nowrap;
 }
 
 /* テーブルスタイル（スプレッドシート風） */
