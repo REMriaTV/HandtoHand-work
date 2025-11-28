@@ -228,6 +228,35 @@ tr:hover td {
     width: 18%;
 }
 
+/* 原稿タブの列幅 */
+#manuscript-table th:nth-child(1),
+#manuscript-table td:nth-child(1) { width: 80px; }
+
+#manuscript-table th:nth-child(2),
+#manuscript-table td:nth-child(2) { width: 120px; }
+
+#manuscript-table th:nth-child(3),
+#manuscript-table td:nth-child(3) { width: 60px; text-align: center; }
+
+#manuscript-table th:nth-child(4),
+#manuscript-table td:nth-child(4) { width: 120px; }
+
+#manuscript-table th:nth-child(5),
+#manuscript-table td:nth-child(5) {
+    min-width: 400px;
+}
+
+#manuscript-table th:nth-child(6),
+#manuscript-table td:nth-child(6) {
+    width: 80px;
+    text-align: right;
+}
+
+#manuscript-table th:nth-child(7),
+#manuscript-table td:nth-child(7) {
+    width: 160px;
+}
+
 /* フッター */
 footer {
     margin-top: 40px;

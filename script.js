@@ -100,6 +100,13 @@ async function loadFromGoogleSheets() {
         });
         displayLocations(locationsResponse.result.values || []);
 
+        // 原稿タブ
+        const manuscriptResponse = await gapi.client.sheets.spreadsheets.values.get({
+            spreadsheetId: SHEETS_CONFIG.SPREADSHEET_ID,
+            range: '5_原稿!A:G',
+        });
+        displayManuscripts(manuscriptResponse.result.values || []);
+
         // 管理タブは非公開のため読み込まない
 
         // 最終更新時刻を更新
@@ -216,6 +223,28 @@ function displayLocations(data) {
             `;
             tbody.appendChild(tr);
         }
+    }
+}
+
+// 原稿データ表示
+function displayManuscripts(data) {
+    const tbody = document.querySelector('#manuscript-table tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    for (let i = 1; i < data.length; i++) {
+        const row = data[i] || [];
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${formatCellContent(row[0])}</td>
+            <td>${formatCellContent(row[1])}</td>
+            <td>${formatCellContent(row[2])}</td>
+            <td>${formatCellContent(row[3])}</td>
+            <td>${formatCellContent(row[4])}</td>
+            <td>${formatCellContent(row[5])}</td>
+            <td>${formatCellContent(row[6])}</td>
+        `;
+        tbody.appendChild(tr);
     }
 }
 
