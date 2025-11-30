@@ -45,7 +45,7 @@ function setupTabNavigation() {
     });
 
     document.addEventListener('keydown', (event) => {
-        const usesShortcut = event.metaKey && event.ctrlKey;
+        const usesShortcut = event.metaKey && event.shiftKey;
         if (!usesShortcut) return;
         const number = parseInt(event.key, 10);
         if (Number.isNaN(number) || number < 1 || number > tabOrder.length) return;
